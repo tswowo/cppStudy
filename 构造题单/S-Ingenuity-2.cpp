@@ -1,72 +1,76 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+char inv(char c)
+{
+    if (c == 'N')
+        return 'S';
+    if (c == 'S')
+        return 'N';
+    if (c == 'E')
+        return 'W';
+    if (c == 'W')
+        return 'E';
+    return ' ';
+}
+
 void solve()
 {
     int n;
     cin >> n;
     string s;
     cin >> s;
-    if(n%2==1)
-    {
-        cout<<"NO\n";
-        return;
-    }
+    string r = "R";
     int x = 0, y = 0;
-    for (auto &c : s)
+    for (int i = 0; i < n; i++)
     {
-        if (c == 'N' || c == 'S')
-            x ^= 1;
-        else if (c == 'E' || c == 'W')
-            y ^= 1;
+        if (s[i] == 'N')
+            y += 1;
+        if (s[i] == 'S')
+            y -= 1;
+        if (s[i] == 'E')
+            x += 1;
+        if (s[i] == 'W')
+            x -= 1;
     }
-    if (x != 0 || y != 0)
+    string ans;
+    for (int i = 0; i < n; i++)
+        ans += r;
+    if (x % 2 || y % 2)
     {
-        cout << "NO\n";
+        puts("NO");
         return;
     }
-    for (auto &c : s)
+    if (x == y && y == 0)
     {
-        if (c == 'N')
+        if (n == 2)
         {
-            if (x == 1)
-                cout << 'H';
-            else
-                cout << 'R';
-            x ^= 1;
+            puts("NO");
+            return;
         }
-        else if (c == 'S')
+        ans[0] = ans[s.find(inv(s[0]))] = 'H';
+    }
+    else
+    {
+        for (int i = 0; i < n; i++)
         {
-            if (x == 0)
-                cout << 'H';
-            else
-                cout << 'R';
-            x ^= 1;
-        }
-        else if (c == 'E')
-        {
-            if (y == 0)
-                cout << 'R';
-            else
-                cout << 'H';
-            y ^= 1;
-        }
-        else
-        {
-            if (y == 1)
-                cout << 'R';
-            else
-                cout << 'H';
-            y ^= 1;
+            if (s[i] == 'N' && y > 0)
+                ans[i] = 'H', y -= 2;
+            if (s[i] == 'S' && y < 0)
+                ans[i] = 'H', y += 2;
+            if (s[i] == 'E' && x > 0)
+                ans[i] = 'H', x -= 2;
+            if (s[i] == 'W' && x < 0)
+                ans[i] = 'H', x += 2;
         }
     }
-    cout << '\n';
+    cout << ans << endl;
 }
 
 int main()
 {
-    freopen("in.txt", "r", stdin);
-    freopen("out.txt", "w", stdout);
+    freopen("in.txt","r",stdin);
+    freopen("out.txt","w",stdout);
     int t;
     cin >> t;
     while (t--)
